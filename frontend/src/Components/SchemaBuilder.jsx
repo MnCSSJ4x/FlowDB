@@ -1,8 +1,7 @@
-import logo from './logo.svg';
-import './App.css';
-import { useState } from 'react';
+import "./SchemaBuilder.css";
+import { useState } from "react";
 
-function AddItem() {
+function SchemaBuilder() {
   const [data, setData] = useState([{ columnName: "", dataType: "" }]);
 
   const handleColumnNameChange = (e, index) => {
@@ -68,7 +67,4 @@ function AddItem() {
   );
 }
 
-
-
-
-export default AddItem;
+export default SchemaBuilder;

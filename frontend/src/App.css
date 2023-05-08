@@ -1,0 +1,25 @@
+.container {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 6fr 1fr; 
+  }
+  
+  .top-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr; 
+  }
+  
+  .left {
+    background-color: #ccc;
+  }
+  
+  .right {
+    background-color: #999;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center;   */
+  }
+  
+  .bottom-section {
+    background-color: #333;
+  }
