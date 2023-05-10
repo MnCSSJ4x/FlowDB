@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "./Upload.css";
-
+import axios from "axios";
 function Upload() {
   const [files, setFiles] = useState([]);
 
@@ -28,15 +28,20 @@ function Upload() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append('file', files[0]);
-
-    fetch('http://localhost:4000/upload', {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response)
-      .then(data => console.log(data))
-      .catch(error => console.error(error));
+    formData.append("author", "Monjoy");
+    formData.append("files", files[0]);
+    axios
+      .post("http://localhost:4000/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
