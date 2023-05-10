@@ -25,7 +25,19 @@ function Upload() {
     // Update the files state with the filtered files
     setFiles(filteredFiles);
   };
-  const handleSubmit = () => {};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('file', files[0]);
+
+    fetch('http://localhost:4000/upload', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response)
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+  };
 
   return (
     <div className>
