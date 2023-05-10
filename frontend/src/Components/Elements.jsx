@@ -8,13 +8,11 @@ function Elements(props) {
     setSelectedOption(option);
     props.handler(true);
 
-    if (option == "Option 2"){
-      const formData = new FormData();
-      formData.append("schema", props.data);
+    if (option == "Option 2") {
       axios
-        .post("http://localhost:4000/schema", formData, {
+        .post("http://localhost:4000/schema", props.data, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         })
         .then((response) => {
@@ -23,9 +21,8 @@ function Elements(props) {
         .catch((error) => {
           console.error(error);
         });
-    };
-  }
-
+    }
+  };
 
   return (
     <div>

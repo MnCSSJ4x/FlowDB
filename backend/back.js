@@ -4,10 +4,12 @@ const fileUpload = require("express-fileupload");
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const pkg = require('csvtojson');
+const bodyParser = require('body-parser');
 const {csv} = pkg;
 
 
 app.use(cors()); 
+app.use(bodyParser.json());
 app.use(fileUpload()) // Enable CORS for all routes
 app.post('/upload', (req, res)=>{
   const filename = req.files.files.name;
@@ -38,7 +40,7 @@ app.post('/upload', (req, res)=>{
 })
 
 app.post('/schema', (req, res)=>{
-    console.log(res.body)
+    console.log(req.body[0]);
 })
 
 
@@ -48,7 +50,7 @@ app.listen(port, () => {
 });
 
 function getClient() {
-const uri = "mongodb://localhost:27017/";
+const uri = "mongodb://0.0.0:27017/";
 return new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 }
 
