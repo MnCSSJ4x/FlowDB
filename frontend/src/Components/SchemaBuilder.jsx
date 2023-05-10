@@ -1,11 +1,18 @@
 import "./SchemaBuilder.css";
 import { useState } from "react";
 
+
+
 function SchemaBuilder() {
   const [data, setData] = useState([{ columnName: "", dataType: "" }]);
 
+  const [c_names, setCNames] = useState(['HI'])
+
+  const dtypes = ['String', 'Integer', 'Boolean', 'TimeStamp', 'Object', 'Date']
+
   const handleColumnNameChange = (e, index) => {
     const newData = [...data];
+    console.log(e.target.value)
     newData[index].columnName = e.target.value;
     setData(newData);
   };
@@ -39,10 +46,9 @@ function SchemaBuilder() {
                 onChange={(e) => handleColumnNameChange(e, index)}
               >
                 <option value="">Select Column Name</option>
-                <option value="firstName">First Name</option>
-                <option value="lastName">Last Name</option>
-                <option value="email">Email</option>
-                <option value="phoneNumber">Phone Number</option>
+                {c_names.map((val) => {
+                  return <option value={val.toString()}>{val}</option>
+                })}
               </select>
             </div>
             <div>
@@ -53,9 +59,12 @@ function SchemaBuilder() {
                 onChange={(e) => handleDataTypeChange(e, index)}
               >
                 <option value="">Select Data Type</option>
-                <option value="text">Text</option>
-                <option value="number">Number</option>
-                <option value="date">Date</option>
+                {dtypes.map((val) => {
+                  return <option value="val">{val}</option>
+                })}
+                
+            
+                
               </select>
             </div>
             <button onClick={() => handleDeleteRow(index)}>Delete</button>
