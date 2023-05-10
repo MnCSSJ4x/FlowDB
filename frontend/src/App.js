@@ -6,18 +6,20 @@ import { useState } from "react";
 
 function App() {
   const [toShow, setToShow] = useState(false);
+  const [data, setData] = useState([{ columnName: "", dataType: "" }]);
+  const [c_names, setCNames] = useState(['HI'])
 
   return (
     <div className="container">
       <div className="top-section">
-        <div className="left">{toShow && <SchemaBuilder />}</div>
+        <div className="left">{toShow && <SchemaBuilder data={data} setData={setData} c_names = {c_names} setCNames = {setCNames}/>}</div>
         <div className="right">
           <ul>
             <li>
               <Upload />
             </li>
             <li>
-              <Elements handler={setToShow}></Elements>
+              <Elements handler={setToShow} data = {data}></Elements>
             </li>
           </ul>
         </div>

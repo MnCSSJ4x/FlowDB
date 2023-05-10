@@ -37,6 +37,11 @@ app.post('/upload', (req, res)=>{
   });
 })
 
+app.post('/schema', (req, res)=>{
+    console.log(res.body)
+})
+
+
 const port = 4000
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

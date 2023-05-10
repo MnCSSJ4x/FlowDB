@@ -2,29 +2,29 @@ import "./SchemaBuilder.css";
 import { useState } from "react";
 
 
+const dtypes = ['String', 'Integer', 'Boolean', 'TimeStamp', 'Object', 'Date']
+function SchemaBuilder({ data, setData, c_names, setCNames }) {
 
-function SchemaBuilder() {
-  const [data, setData] = useState([{ columnName: "", dataType: "" }]);
 
-  const [c_names, setCNames] = useState(['HI'])
-
-  const dtypes = ['String', 'Integer', 'Boolean', 'TimeStamp', 'Object', 'Date']
+  
 
   const handleColumnNameChange = (e, index) => {
     const newData = [...data];
-    console.log(e.target.value)
+   
     newData[index].columnName = e.target.value;
     setData(newData);
   };
 
   const handleDataTypeChange = (e, index) => {
     const newData = [...data];
+    
     newData[index].dataType = e.target.value;
     setData(newData);
   };
 
   const handleAddRow = () => {
     setData([...data, { columnName: "", dataType: "" }]);
+    
   };
 
   const handleDeleteRow = (index) => {
@@ -60,7 +60,7 @@ function SchemaBuilder() {
               >
                 <option value="">Select Data Type</option>
                 {dtypes.map((val) => {
-                  return <option value="val">{val}</option>
+                  return <option value={val}>{val}</option>
                 })}
                 
             
