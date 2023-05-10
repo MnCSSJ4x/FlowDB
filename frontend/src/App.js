@@ -16,10 +16,10 @@ function App() {
         <div className="right">
           <ul>
             <li>
-              <Upload />
+              <Upload c_names = {c_names} setCNames = {setCNames}/>
             </li>
             <li>
-              <Elements handler={setToShow} data = {data}></Elements>
+              <Elements handler={setToShow} data = {data} ></Elements>
             </li>
           </ul>
         </div>

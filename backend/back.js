@@ -40,7 +40,8 @@ app.post('/upload', (req, res)=>{
 })
 
 app.post('/schema', (req, res)=>{
-    console.log(req.body[0]);
+    console.log(req.body);
+    res.json({'message':"gg"})
 })
 
 

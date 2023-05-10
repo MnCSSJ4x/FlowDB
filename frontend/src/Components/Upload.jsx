@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import "./Upload.css";
 import axios from "axios";
-function Upload() {
+function Upload(props) {
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (event) => {
@@ -37,7 +37,7 @@ function Upload() {
         },
       })
       .then((response) => {
-        console.log(response);
+        props.setCNames(response.data["keys"]);
       })
       .catch((error) => {
         console.error(error);
