@@ -17,7 +17,6 @@ function SchemaBuilder({ data, setData, c_names, setCNames }) {
 
   const handleDataTypeChange = (e, index) => {
     const newData = [...data];
-    
     newData[index].dataType = e.target.value;
     setData(newData);
   };
@@ -33,13 +32,23 @@ function SchemaBuilder({ data, setData, c_names, setCNames }) {
     setData(newData);
   };
 
+  const handleChechbox = (e, index) => {
+    const newData = [...data];
+    newData[index][e.target.id] = Number(e.target.checked)
+    setData(newData);
+  }
+
   return (
     <div>
       <ul>
         {data.map((row, index) => (
           <li key={index}>
             <div>
-              <label htmlFor={`columnName-${index}`}>Column Name</label>
+            <label htmlFor={`columnName-${index}`}>column name</label>
+            <input type="text" />
+            </div>
+            <div>
+              <label htmlFor={`referred from-${index}`}>referred from</label>
               <select
                 id={`columnName-${index}`}
                 value={row.columnName}
@@ -52,7 +61,7 @@ function SchemaBuilder({ data, setData, c_names, setCNames }) {
               </select>
             </div>
             <div>
-              <label htmlFor={`dataType-${index}`}>Data Type</label>
+              <label htmlFor={`dataType-${index}`}>data type</label>
               <select
                 id={`dataType-${index}`}
                 value={row.dataType}
@@ -67,10 +76,34 @@ function SchemaBuilder({ data, setData, c_names, setCNames }) {
                 
               </select>
             </div>
+            <div class="checkbox-list">
+  <label>
+    <input type="checkbox" id = "pk" 
+                onChange={(e) => handleChechbox(e, index)}/>
+    Primary Key
+  </label>
+  <label>
+    <input type="checkbox" id = "nc" 
+                onChange={(e) => handleChechbox(e, index)} />
+    Null Check
+  </label>
+  <label>
+    <input type="checkbox" id = "uc" 
+                onChange={(e) => handleChechbox(e, index)}/>
+    Unique
+  </label>
+  <label>
+    <input type="checkbox" id = "fk" 
+                onChange={(e) => handleChechbox(e, index)}/>
+    foreign key
+  </label>
+</div>
             <button onClick={() => handleDeleteRow(index)}>Delete</button>
           </li>
         ))}
       </ul>
+      
+      
       <button onClick={handleAddRow}>+ Add Row</button>
     </div>
   );

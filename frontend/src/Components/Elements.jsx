@@ -7,10 +7,16 @@ function Elements(props) {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     props.handler(true);
+    props.setData([{ columnName: "", dataType: "", pk: 'f', nc: 'f', uc: 'f', fk: 'f' }])
 
-    if (option == "Option 2") {
+    if (option == 'Option 2'){
+      props.handler(false);
+      props.modTable([...props.tables, props.data])
+    }
+
+    if (option == "Option 3") {
       axios
-        .post("http://localhost:4000/schema", props.data, {
+        .post("http://localhost:4000/schema", props.tables, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -21,6 +27,7 @@ function Elements(props) {
         .catch((error) => {
           console.error(error);
         });
+        props.handler(false);
     }
   };
 
@@ -31,20 +38,20 @@ function Elements(props) {
           className="button-gap"
           onClick={() => handleOptionClick("Option 1")}
         >
-          Add Schema
+          + Add Collection
         </button>
 
         <button
           className="button-gap"
           onClick={() => handleOptionClick("Option 2")}
         >
-          Finalize Schema
+          Finalize Collection
         </button>
         <button
           className="button-gap"
           onClick={() => handleOptionClick("Option 3")}
         >
-          Option 3
+          Finalize Schema
         </button>
       </ul>
       {selectedOption && <p>You selected: {selectedOption}</p>}
