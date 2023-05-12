@@ -22,7 +22,7 @@ function SchemaBuilder({ data, setData, c_names, setCNames }) {
   };
 
   const handleAddRow = () => {
-    setData([...data, { columnName: "", dataType: "" }]);
+    setData([...data, { columnName: "", dataType: "", pk: 0, nc: 0, uc: 0, fk: 0}]);
     
   };
 
