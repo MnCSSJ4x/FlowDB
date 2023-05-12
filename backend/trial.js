@@ -1,20 +1,18 @@
-const { MongoClient } = require('mongodb');
-// Replace the uri string with your MongoDB deployment's connection string.
-const uri = "mongodb://0.0.0:27017/";
-const client = new MongoClient(uri);
-async function run() {
-  try {
-    const database = client.db("insertDB");
-    const haiku = database.collection("haiku");
-    // create a document to insert
-    const doc = {
-      title: "Record of a Shriveled Datum",
-      content: "No bytes, no problem. Just insert a document, in MongoDB",
-    }
-    const result = await haiku.insertOne(doc);
-    console.log(`A document was inserted with the _id: ${result.insertedId}`);
-  } finally {
-    await client.close();
-  }
-}
-run().catch(console.dir);
+const data = [  {
+  columnName: 'age',
+  dataType: 'Integer',
+  pk: 'f',
+  nc: 1,
+  uc: 'f',
+  fk: 'f'
+},  { columnName: 'bmi', dataType: 'Integer', nc: 1}];
+
+const result = data.reduce((acc, obj) => {
+  Object.entries(obj).forEach(([key, value]) => {
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(value);
+  });
+  return acc;
+}, {});
+
+console.log(result);

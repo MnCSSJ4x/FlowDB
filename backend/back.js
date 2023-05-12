@@ -40,8 +40,23 @@ app.post('/upload', (req, res)=>{
 })
 
 app.post('/schema', (req, res)=>{
-    console.log(req.body);
-    res.json({'message':"gg"})
+    // console.log("OKAY RECIEVED")
+    const data = req.body;
+    console.log(data[0])
+    const result = data[0].reduce((acc, obj) => {
+      Object.entries(obj).forEach(([key, value]) => {
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(value);
+      });
+      return acc;
+    }, {});
+    
+    buildCollection(getClient(), result).catch(console.dir).then(()=>{
+      runConstraints(getClient(), data[0]).catch(console.dir).then(()=>{
+        res.json({"message":"gg"})
+      })
+    })
+    // console.log(req.body);
 })
 
 
@@ -60,11 +75,6 @@ async function queryValues(client){
   try{
       const database = client.db("testDB");
       const table = database.collection("temporary");
-  
-      // const query = { };
-      // const options = {
-      // projection: { name: 1, email: 1},
-      // };
       const obj = await table.findOne();
       const keys = Object.keys(obj);
       console.log(keys)
@@ -84,5 +94,80 @@ async function insertValues(client, documents) {
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
   } finally {
       await client.close();
+  }  
+}
+
+async function buildCollection(client, columns) {
+  try {
+      const database = client.db("testDB");
+      const haiku = database.collection("temporary");
+      const name = database.collection("schema1");
+      const projection = columns.columnName.reduce((acc, curr) => ({ ...acc, [curr]: 1 }), {});
+      const data = await haiku.find({}, {projection}).toArray()
+      await name.insertMany(data, (err) =>{
+          if (err) throw err;
+      })
+  } finally {
+      await client.close();
   }
+}
+
+async function runConstraints(client, columns) {
+  try {
+    const database = client.db("testDB");
+    const name = database.collection("schema1");
+
+    for (let i = 0; i < columns.length; i++) {
+      const item = columns[i];
+
+      if (item.nc == 1) {
+        try {
+          const query = { [item.columnName]: { $type: "null" } };
+          const result = await name.deleteMany(query);
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      if (item.uc == 1) {
+        try {
+          const duplicates = await name
+            .aggregate([
+              {
+                $group: {
+                  _id: { field1: "$age" },
+                  count: { $sum: 1 },
+                  docs: { $push: "$_id" },
+                },
+              },
+              {
+                $match: {
+                  count: { $gt: 1 },
+                },
+              },
+              {
+                $unwind: "$docs",
+              },
+            ])
+            .toArray();
+
+          const deletePromises = duplicates.map(({ docs }) =>
+            name.deleteOne({ _id: docs })
+          );
+          await Promise.all(deletePromises);
+          console.log("Duplicates removed");
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+
+    // const projection = columns.columnName.reduce((acc
+    // const data = await haiku.find({}, {projection}).toArray()
+    // await name.insertMany(data, (err) =>{
+    //     if (err) throw err;
+    // })
+  } finally {
+    await client.close();
   }
+}
