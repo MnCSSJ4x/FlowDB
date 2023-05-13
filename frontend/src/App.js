@@ -6,12 +6,12 @@ import { useState } from "react";
 
 function App() {
   const [toShow, setToShow] = useState(false);
-  const [data, setData] = useState([{ columnName: "", dataType: "", pk: 0, nc: 0, uc: 0, fk: 0}]);
+  const [data, setData] = useState([{ columnName: "", dataType: "", pk: 0, nc: 0, uc: 0, fk: 0,replace:0, replaceWith: "none", replaceActive:0, tempColName:""}]);
   const [c_names, setCNames] = useState(['HI'])
 
   const [tables, modTable] = useState([])
 
-  const [messages, setMessages] = useState(['>Hi my name is Tejas'])
+  const [messages, setMessages] = useState(['>Welcome to flow db'])
 
   return (
     <div className="container">

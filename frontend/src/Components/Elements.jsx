@@ -7,14 +7,17 @@ function Elements(props) {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     props.handler(true);
-    props.setData([{ columnName: "", dataType: "", pk: 'f', nc: 'f', uc: 'f', fk: 'f' }])
+    props.setData([
+      { columnName: "", dataType: "", pk: "f", nc: "f", uc: "f", fk: "f" },
+    ]);
 
-    if (option == 'Option 2'){
+    if (option == "Option 2") {
       props.handler(false);
-      props.modTable([...props.tables, props.data])
+      props.modTable([...props.tables, props.data]);
     }
 
     if (option == "Option 3") {
+      console.log(props.tables);
       axios
         .post("http://localhost:4000/schema", props.tables, {
           headers: {
@@ -27,7 +30,7 @@ function Elements(props) {
         .catch((error) => {
           console.error(error);
         });
-        props.handler(false);
+      props.handler(false);
     }
   };
 
