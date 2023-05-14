@@ -38,7 +38,13 @@ function Upload(props) {
       })
       .then((response) => {
         props.setCNames(response.data["keys"]);
-        props.setMessages([...props.messages, 'The following columns have been auto detected by our system :' + response.data["keys"].join(' ')])
+        let temp = props.messages;
+        let textToAdd =
+          ">The following columns have been auto detected by our system :" +
+          response.data["keys"].join(" ");
+        temp.push(textToAdd);
+        props.setMessages(temp);
+        console.log(props.messages);
       })
       .catch((error) => {
         console.error(error);

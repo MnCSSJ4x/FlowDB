@@ -3,7 +3,6 @@ import "./Elements.css";
 import axios from "axios";
 function Elements(props) {
   const [selectedOption, setSelectedOption] = useState(null);
-
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     props.handler(1);
@@ -33,6 +32,7 @@ function Elements(props) {
 
     if (option == "Option 3") {
       console.log(props.data);
+
       axios
         .post("http://localhost:4000/query", props.data, {
           headers: {
@@ -40,11 +40,26 @@ function Elements(props) {
           },
         })
         .then((response) => {
-          console.log(response);
+          let dat = response.data["result"];
+          const jsonString = JSON.stringify(dat);
+          console.log(jsonString);
+          let temp = props.messages;
+          let textToAdd = ">The Output for your query :" + jsonString;
+          console.log(textToAdd);
+          temp.push(textToAdd);
+          props.setMessages(temp);
+          alert("Successful Query. Output Ready!");
         })
         .catch((error) => {
           console.error(error);
+          //     let temp = props.messages;
+          // let textToAdd = ">Query Sent to Server" + response.data.data.join(" ");
+          // temp.push(textToAdd);
         });
+      props.handler(false);
+    }
+    if (option == "Option 4") {
+      console.log("terminal refreshed");
       props.handler(false);
     }
   };
@@ -70,6 +85,12 @@ function Elements(props) {
           onClick={() => handleOptionClick("Option 3")}
         >
           Submit Query
+        </button>
+        <button
+          className="button-gap"
+          onClick={() => handleOptionClick("Option 4")}
+        >
+          Show Output in Terminal
         </button>
       </ul>
       {selectedOption && <p>You selected: {selectedOption}</p>}

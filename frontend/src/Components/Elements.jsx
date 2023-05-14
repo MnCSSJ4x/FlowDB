@@ -26,7 +26,6 @@ function Elements(props) {
           },
         })
         .then((response) => {
-          console.log(response);
           history("/query", {
             state: {
               resp: response.data.data,

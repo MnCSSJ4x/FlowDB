@@ -3,6 +3,7 @@ import SchemaBuilder from "./Components/SchemaBuilder";
 import Upload from "./Components/Upload";
 import Elements from "./Components/Elements";
 import { useState } from "react";
+import { useEffect } from "react";
 
 function App() {
   const [toShow, setToShow] = useState(false);
