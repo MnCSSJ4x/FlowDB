@@ -1,0 +1,65 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  li:last-child {
+    margin-bottom: 0;
+  }
+  .list-element {
+    margin-bottom: 0px;
+    border-radius: 0px;
+  }
+  label {
+    margin-right: 20px;
+    font-weight: bold;
+  }
+  
+  select, input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #0069d9;
+  }
+  
+  .checkbox-list {
+    display: flex;
+  }
+  
+  .checkbox-list label {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .checkbox-list input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
