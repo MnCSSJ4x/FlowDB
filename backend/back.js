@@ -7,7 +7,15 @@ const pkg = require('csvtojson');
 const bodyParser = require('body-parser');
 const {csv} = pkg;
 let count = 1;
-
+const dtypeToMongo = {
+  "String":"string",
+  "Integer":"int",
+  "Double":"double",
+  "double":"double",
+  "Boolean":"bool",
+  "Object":"object",
+  "Date":"date",
+}
 app.use(cors()); 
 app.use(bodyParser.json());
 app.use(fileUpload()) // Enable CORS for all routes
@@ -176,7 +184,7 @@ async function buildCollection(client, columns, count) {
       }
       for(let i=0; i<columns.tempColName.length; i++){
         console.log(columns.tempColName[i])
-        proj[columns.tempColName[i]] = {$convert: {input: `$${columns.tempColName[i]}`, to: columns.dataType[i], onError: null}}
+        proj[columns.tempColName[i]] = {$convert: {input: `$${columns.tempColName[i]}`, to: dtypeToMongo[columns.dataType[i]], onError: null}}
       }
       const pipeline = [{
           $project: proj

@@ -1,7 +1,7 @@
 import "./RowBuilder.css";
 import { useState } from "react";
 
-const dtypes = ["String", "Integer", "Boolean", "TimeStamp", "Object", "Date"];
+const dtypes = ["String", "Integer", "Boolean", "Object", "Date"];
 function RowBuilder({ data, setData, c_names, setCNames }) {
   const handleColumnNameChange = (e, index) => {
     const newData = [...data];
