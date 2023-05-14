@@ -40,9 +40,9 @@ app.post('/upload', (req, res)=>{
 })
 
 app.post('/schema', (req, res)=>{
-    // console.log("OKAY RECIEVED")
+    structure = []
     const data = req.body;
-    data.forEach((dataItem) =>{
+    const promises = data.map((dataItem) =>{
       const result = dataItem.reduce((acc, obj) => {
         Object.entries(obj).forEach(([key, value]) => {
           if (!acc[key]) acc[key] = [];
@@ -52,15 +52,22 @@ app.post('/schema', (req, res)=>{
       }, {});
       console.log(result)
       count+=1
-      buildCollection(getClient(), result, count).catch(console.dir).then((name)=>{
+      return buildCollection(getClient(), result, count).then((name)=>{
         console.log("running constraints...")
-        runConstraints(getClient(), dataItem, name).catch(console.dir).then(()=>{
+        return runConstraints(getClient(), dataItem, name).then((struct)=>{
+          structure.push(struct);
+          console.log(struct)
           console.log("Okay done!");
+          return struct;
         })
       })
-      // console.log(result);
+    })
+    Promise.all(promises).then(() => {
+      res.json({"data": structure})
+    }).catch((error) => {
+      console.error(error);
+      res.status(500).json({"error": "Something went wrong."});
     });
-    res.json({"message":"gg"})
 })
 
 
@@ -129,8 +136,6 @@ async function buildCollection(client, columns, count) {
       // };
       // console.log(s)
       // const val = {validator:s}
-
-      // const name = await database.createCollection(collectionName, val);
 
       const data = await haiku.find({}, {projection}).toArray()
       await name.insertMany(data, (err) =>{
@@ -252,12 +257,12 @@ async function runConstraints(client, columns, collectionName) {
         }
       }
     }
-
-    // const projection = columns.columnName.reduce((acc
-    // const data = await haiku.find({}, {projection}).toArray()
-    // await name.insertMany(data, (err) =>{
-    //     if (err) throw err;
-    // })
+    const sampleDoc = await name.findOne({});
+    const columnNames = Object.keys(sampleDoc);
+    console.log(columnNames)
+    const prop = {[collectionName]:columnNames}
+    console.log(prop)
+    return prop;
   } finally {
     await client.close();
   }
