@@ -38,7 +38,10 @@ app.post('/upload', (req, res)=>{
     }
   });
 })
-
+app.post('/query', (req, res)=>{
+  console.log(req.body);
+  res.json({"message":"gg"});
+})
 app.post('/schema', (req, res)=>{
     structure = []
     const data = req.body;

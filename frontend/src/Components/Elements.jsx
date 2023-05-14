@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import "./Elements.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function Elements(props) {
   const [selectedOption, setSelectedOption] = useState(null);
-
+  const history = useNavigate();
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     props.handler(true);
@@ -26,6 +27,11 @@ function Elements(props) {
         })
         .then((response) => {
           console.log(response);
+          history("/query", {
+            state: {
+              resp: response.data.data,
+            },
+          });
         })
         .catch((error) => {
           console.error(error);

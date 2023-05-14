@@ -9,13 +9,13 @@ function Elements(props) {
     props.handler(1);
     props.data.type = 1;
     props.setData([
-    {
-      type : 1,
-      tableName: "",
-      columnName: "",
-      limit: 0,
-      condition: ""
-  },
+      {
+        type: 1,
+        tableName: "",
+        columnName: "",
+        limit: 0,
+        condition: "",
+      },
     ]);
 
     if (option == "Option 2") {
@@ -23,16 +23,16 @@ function Elements(props) {
       props.data.type = 2;
       props.setData([
         {
-          type : 2,
+          type: 2,
           tableName: "",
           columnName: "",
-          condition: ""
-      },
-        ]);
+          condition: "",
+        },
+      ]);
     }
 
     if (option == "Option 3") {
-      console.log(props.tables);
+      console.log(props.data);
       axios
         .post("http://localhost:4000/query", props.data, {
           headers: {
