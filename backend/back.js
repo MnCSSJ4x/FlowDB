@@ -40,8 +40,24 @@ app.post('/upload', (req, res)=>{
 })
 app.post('/query', (req, res)=>{
   console.log(req.body);
-  res.json({"message":"gg"});
+  const request = req.body;
+  console.log(request[0].type)
+  if(request[0].type == 1){
+    console.log("Calling select query handler...");
+    selectQuery(getClient(), request[0]).then((result)=>{
+      res.json({"result": result});
+    })
+  }
+  else{
+    console.log("Calling aggregate query handler...")
+    aggregateQuery(getClient(), request[0]).then((result)=>{
+      res.json({"result": result});
+    })
+  }
+  // res.json({"message":"gg"});
 })
+
+
 app.post('/schema', (req, res)=>{
     structure = []
     const data = req.body;
@@ -267,6 +283,111 @@ async function runConstraints(client, columns, collectionName) {
     console.log(prop)
     return prop;
   } finally {
+    await client.close();
+  }
+}
+
+async function aggregateQuery(client, request){
+  try{
+    const database = client.db("testDB");
+    console.log(request.tableName);
+    const name = database.collection(request.tableName);
+    let result;
+    switch(request.condition){
+      case "min": result = await name.find().sort({ [request.columnName]: 1 }).limit(1).toArray();
+                  break;
+      case "max": result = await name.find().sort({ [request.columnName] :-1}).limit(1).toArray();
+                  break;
+      case "count": result = await name.count();
+                    break;
+      case "range": const temp1 = await name.find().sort({ [request.columnName] :-1}).limit(1).toArray();
+                    const temp2 = await name.find().sort({ [request.columnName] :1}).limit(1).toArray();
+                    const res = []
+                    res.push(temp2);
+                    res.push(temp1);
+                    result = res;
+      case "nunique": const distinctValues = await name.distinct(request.columnName);
+                      result = distinctValues.length;
+      case "avg": const temp = await name.aggregate([{$group: {_id: null,avgValue: { $avg: `$${request.columnName}` }}}]).toArray();
+                  result = temp[0].avgValue;
+     
+    }
+    console.log(result);
+    return result;
+  }finally{
+    await client.close();
+  }
+}
+
+
+async function selectQuery(client, request){
+  try{
+    const database = client.db("testDB");
+    console.log(request.tableName);
+    const name = database.collection(request.tableName);
+    let query = {};
+    let result;
+    let percentile;
+    let totalDocsCount;
+    let percentileIndex;
+    switch(request.condition){
+      case "=": query = {};
+                query[request.columnName] = parseInt(request.rhs);
+                console.log(query)
+                result = await name.find(query).limit(parseInt(request.limit)).toArray();
+                console.log(result)
+                break;
+      case ">": query = {};
+                query[request.columnName] = { $gt: parseInt(request.rhs) };
+                console.log(query);
+                result = await name.find(query).limit(parseInt(request.limit)).toArray();
+                console.log(result);
+                break;
+      case ">=": query = {};
+      query[request.columnName] = { $gte: parseInt(request.rhs) };
+                console.log(query);
+                result = await name.find(query).limit(parseInt(request.limit)).toArray();
+                console.log(result);
+                break;
+                case "<": query = {};
+                query[request.columnName] = { $lt: parseInt(request.rhs) };
+                console.log(query);
+                result = await name.find(query).limit(parseInt(request.limit)).toArray();
+                console.log(result);
+                break;
+      case "<=": query = {};
+      query[request.columnName] = { $lte: parseInt(request.rhs) };
+      console.log(query);
+      result = await name.find(query).limit(parseInt(request.limit)).toArray();
+      console.log(result);
+      break;
+      case "!=": query = {};
+                query[request.columnName] = { $ne: parseInt(request.rhs) };
+                console.log(query);
+                result = await name.find(query).limit(parseInt(request.limit)).toArray();
+                console.log(result);
+                break;
+      case "> 75%": query = {};
+      percentile = 0.75;
+      query[request.columnName] = { $ne: null };
+      totalDocsCount = await name.count(query);
+      percentileIndex = Math.ceil(totalDocsCount * percentile);
+      result = await name.find(query).sort({ [request.columnName]: 1 }).skip(percentileIndex).limit(parseInt(request.limit)).toArray();
+      case "< 25%": query = {};
+      percentile = 0.25;
+      query[request.columnName] = { $ne: null };
+                    totalDocsCount = await name.count(query);
+                    percentileIndex = Math.ceil(totalDocsCount * percentile);
+                    result = await name.find(query).sort({ [request.columnName]: 1 }).skip(percentileIndex).limit(parseInt(request.limit)).toArray();                   
+
+    }
+
+    console.log(result);
+    console.log("The limit is " + request.limit)
+    console.log("The rhs is" + request.rhs)
+    return result;
+
+  }finally{
     await client.close();
   }
 }

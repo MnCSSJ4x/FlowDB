@@ -21,6 +21,7 @@ const SchemaBuilder = ({
           columnName: "",
           limit: 0,
           condition: "",
+          rhs:""
         },
       ]);
     } else {

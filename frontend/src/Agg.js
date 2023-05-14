@@ -14,7 +14,8 @@ function App() {
     tableName: "",
     columnName: "",
     limit: 0,
-    condition: ""
+    condition: "",
+    rhs: ""
   }]);
   
   const tables = []

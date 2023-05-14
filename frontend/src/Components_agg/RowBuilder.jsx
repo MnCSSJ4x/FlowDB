@@ -25,9 +25,15 @@ function RowBuilder({
     // responseFromServer;
     setCNames(cName);
   };
-  const handleTextChange = (e, index) => {
+  const handleTextChangeLimit = (e, index) => {
     const newData = [...data];
-    newData[index].tempColName = e.target.value;
+    newData[index].limit = e.target.value;
+    setData(newData);
+  };
+
+  const handleTextChangeRhs = (e, index) => {
+    const newData = [...data];
+    newData[index].rhs = e.target.value;
     setData(newData);
   };
 
@@ -98,14 +104,14 @@ function RowBuilder({
               <input
                 type="numeric"
                 placeholder="put number"
-                onChange={(e) => handleTextChange(e, index)}
+                onChange={(e) => handleTextChangeRhs(e, index)}
               />
             </div>
             <div>
               <label htmlFor={`columnName-${index}`}>limit</label>
               <input
                 type="numeric"
-                onChange={(e) => handleTextChange(e, index)}
+                onChange={(e) => handleTextChangeLimit(e, index)}
               />
             </div>
             <button onClick={() => handleDeleteRow(index)}>Delete</button>
