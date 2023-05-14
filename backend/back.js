@@ -52,9 +52,10 @@ app.post('/schema', (req, res)=>{
       }, {});
       console.log(result)
       count+=1
-      buildCollection(getClient(), result, count).catch(console.dir).then(()=>{
-        runConstraints(getClient(), dataItem).catch(console.dir).then(()=>{
-          
+      buildCollection(getClient(), result, count).catch(console.dir).then((name)=>{
+        console.log("running constraints...")
+        runConstraints(getClient(), dataItem, name).catch(console.dir).then(()=>{
+          console.log("Okay done!");
         })
       })
       // console.log(result);
@@ -135,78 +136,70 @@ async function buildCollection(client, columns, count) {
       await name.insertMany(data, (err) =>{
           if (err) throw err;
       })
-      console.log("HOYA")
       for(let i=0; i<columns.columnName.length; i++){
-        console.log("HOYA")
-        console.log(columns.columnName[i])
-        console.log(columns.tempColName[i])
+        if(columns.columnName[i] == columns.tempColName[i]) continue;
         const res = await name.updateMany(
           {}, {$rename: {[columns.columnName[i]]:columns.tempColName[i]}}
         )
         console.log(res)
       }
 
-      //To typecase (Hardcoded for input collection of type)
-      // {
-      //   columnName: [ 'age' ],
-      //   dataType: [ 'Integer' ],
-      //   pk: [ 'f' ],
-      //   nc: [ 'f' ],
-      //   uc: [ 'f' ],
-      //   fk: [ 'f' ],
-      //   tempColName: [ 'ahr' ]
-      // }
-      await name.updateMany({}, { $set: { "ahr": { $toInt: "$ahr" } } });
+      proj = {}
+      for(let i=0; i<columns.dataType.length; i++){
+        if(columns.dataType[i] == "Integer"){
+          columns.dataType[i] = "double"
+        }
+      }
+      for(let i=0; i<columns.tempColName.length; i++){
+        console.log(columns.tempColName[i])
+        proj[columns.tempColName[i]] = {$convert: {input: `$${columns.tempColName[i]}`, to: columns.dataType[i], onError: null}}
+      }
+      const pipeline = [{
+          $project: proj
+    }];
 
-      // for(let i=0; i<columns.columnName.length; i++){
-      //   const attributeName = columns.columnName[i];
-      //   console.log(`$${attributeName}`)
-      //   switch (columns.dataType[i]) {
-      //     case 'Integer':
-      //       console.log("YEAHHH");
-      //       const res = await name.updateMany(
-      //         { [attributeName]: { $not: { $type: "number" } } },
-      //         { $set: { [attributeName]: { $toInt: `$age` } } }
-      //       )
-      //       console.log(res)
-      //       break;
-      //     // Add more cases for other data types as needed
-      //     default:
-      //       break;
-      //   }
-      // }
-
-
+      // Run the aggregation pipeline and update the collection
+      const results = await name.aggregate(pipeline).toArray(); // Print the converted documents
+      // console.log(results)
+        // Replace the old documents with the converted documents
+      await name.deleteMany({})
+      await name.insertMany(results, (err)=>{
+        if(err) throw err;
+      });
+      return collectionName;
   } finally {
       await client.close();
   }
 }
 
-async function runConstraints(client, columns) {
+async function runConstraints(client, columns, collectionName) {
   try {
     const database = client.db("testDB");
-    const collectionName = "schema"+count;
+    // const collectionName = "schema"+count;
     const name = database.collection(collectionName);
+    console.log(collectionName)
 
     for (let i = 0; i < columns.length; i++) {
       const item = columns[i];
 
-      if (item.nc == 1 && item.replaceWith == "none") {
+      if (item.nc == 1 && item.replaceWith == "delete") {
         try {
-          const query = { [item.columnName]: { $type: "null" } };
+          console.log("Deleting NULLs for" + item.tempColName)
+          const query = { [item.tempColName]: { $type: "null" } };
           const result = await name.deleteMany(query);
-    
+          console.log(result)
         } catch (err) {
           console.error(err);
         }
       }
       if(item.nc == 1 && item.replaceWith == "mean"){
         try{
+          console.log("Replacing mean for " + `$${item.tempColName}`)
           const avgResult = await name.aggregate([
             {
               $group: {
                 _id: null,
-                avgValue: { $avg: "$age" }
+                avgValue: { $avg: `$${item.tempColName}`.toString() }
               }
             },
             {
@@ -216,10 +209,10 @@ async function runConstraints(client, columns) {
               }
             }
           ]).toArray();
-
+          console.log(avgResult)
           const result = await name.updateMany(
-            { age: null },
-            { $set: { age: avgResult[0].avgValue } }
+            { [item.tempColName]:null },
+            { $set: {[item.tempColName]: avgResult[0].avgValue } }
           );
           console.log(`${result.modifiedCount} documents updated.`);
 
@@ -233,7 +226,7 @@ async function runConstraints(client, columns) {
             .aggregate([
               {
                 $group: {
-                  _id: { field1: "$age" },
+                  _id: { field1: `$${item.tempColName}` },
                   count: { $sum: 1 },
                   docs: { $push: "$_id" },
                 },

@@ -1,7 +1,7 @@
 age,sex,bmi,smoker,region,children,charges
-,male,25.745,no,northeast,2,3279.86855
+1,male,,no,northeast,2,3279.86855
 36.9769779971995,female,25.74416484562688,yes,southeast,3,21454.494238637613
-,male,30.03,no,southeast,1,1720.3537
+2,male,30.03,no,southeast,1,1720.3537
 37.0,male,30.676891267593227,no,northeast,3,6801.437541833969
 58.0,male,32.01,no,southeast,1,11946.6259
 46.0,male,26.62,no,southeast,1,7742.1098
@@ -16,8 +16,8 @@ age,sex,bmi,smoker,region,children,charges
 22.344224631004682,male,27.045184791455398,no,northeast,4,18091.373808199874
 46.69773900375039,male,33.55485917857485,yes,northeast,1,41501.65554565529
 19.860852930850523,female,25.323506019653745,no,northwest,1,2661.191273367456
-,male,36.08,yes,southeast,1,42211.1382
+3,male,36.08,yes,southeast,1,42211.1382
 64.0,female,30.115,no,northwest,3,16455.70785
 29.0,male,32.11,no,northwest,2,4433.9159
-female,34.8,no,southwest,2,6571.544
-,female,24.1,no,southwest,1,26236.57997
+29.0,female,34.8,no,southwest,2,6571.544
+4,female,24.1,no,southwest,1,26236.57997
