@@ -11,7 +11,6 @@ const dtypeToMongo = {
   "String":"string",
   "Integer":"int",
   "Double":"double",
-  "double":"double",
   "Boolean":"bool",
   "Object":"object",
   "Date":"date",
@@ -177,11 +176,23 @@ async function buildCollection(client, columns, count) {
       }
 
       proj = {}
-      for(let i=0; i<columns.dataType.length; i++){
-        if(columns.dataType[i] == "Integer"){
-          columns.dataType[i] = "double"
-        }
-      }
+      // for(let i=0; i<columns.dataType.length; i++){
+      //   if(columns.dataType[i] == "Integer"){
+      //     columns.dataType[i] = "double"
+      //   }
+      //   if(columns.dataType[i] =="Boolean"){
+      //     columns.dataType[i] = "bool"
+      //   }
+      //   if(columns.dataType[i] =="String"){
+      //     columns.dataType[i] = "string"
+      //   }
+      //   if(columns.dataType[i] =="Object"){
+      //     columns.dataType[i] = "object"
+      //   }
+      //   if(columns.dataType[i] =="Date"){
+      //     columns.dataType[i] = "date"
+      //   }
+      // }
       for(let i=0; i<columns.tempColName.length; i++){
         console.log(columns.tempColName[i])
         proj[columns.tempColName[i]] = {$convert: {input: `$${columns.tempColName[i]}`, to: dtypeToMongo[columns.dataType[i]], onError: null}}
