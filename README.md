@@ -20,4 +20,4 @@ We believe using this application users can leverage the technical advantages wh
 Doing these steps will start the application and then the user can test out with the help of data folder inside backend with the csv present there or use their own csv files! 
 <br/>
 Please go through the report.pdf to get more idea about our application as well as see the performance benchmarks.<br/> 
-A full video demo for the same will be uploaded soon! 
+A full presentation and demo video can be found here: https://www.youtube.com/watch?v=dyE1VIBVGcU
