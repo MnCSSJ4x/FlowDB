@@ -19,6 +19,7 @@ function Elements(props) {
 
     if (option == "Option 3") {
       console.log(props.tables);
+      const startTime = performance.now();
       axios
         .post("http://localhost:4000/schema", props.tables, {
           headers: {
@@ -26,6 +27,9 @@ function Elements(props) {
           },
         })
         .then((response) => {
+          const endTime = performance.now();
+          const duration = endTime - startTime;
+          console.log(duration);
           history("/query", {
             state: {
               resp: response.data.data,

@@ -32,6 +32,7 @@ function Elements(props) {
 
     if (option == "Option 3") {
       console.log(props.data);
+      const startTime = performance.now();
 
       axios
         .post("http://localhost:4000/query", props.data, {
@@ -40,6 +41,9 @@ function Elements(props) {
           },
         })
         .then((response) => {
+          const endTime = performance.now();
+          const duration = endTime - startTime;
+          console.log(duration);
           let dat = response.data["result"];
           const jsonString = JSON.stringify(dat);
           console.log(jsonString);
