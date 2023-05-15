@@ -44,7 +44,7 @@ function RowBuilder({ data, setData, c_names, setCNames }) {
     if (e.target.id === "nc") {
       newData[index]["replace"] = !newData[index]["replace"];
     }
-
+    console.log(e.target.id);
     newData[index][e.target.id] = Number(e.target.checked);
     setData(newData);
   };
@@ -85,14 +85,6 @@ function RowBuilder({ data, setData, c_names, setCNames }) {
               </select>
             </div>
             <div class="checkbox-list">
-              <label>
-                <input
-                  type="checkbox"
-                  id="pk"
-                  onChange={(e) => handleChechbox(e, index)}
-                />
-                Primary Key
-              </label>
               <label>
                 <input
                   type="checkbox"
@@ -165,14 +157,6 @@ function RowBuilder({ data, setData, c_names, setCNames }) {
                   onChange={(e) => handleChechbox(e, index)}
                 />
                 Unique
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  id="fk"
-                  onChange={(e) => handleChechbox(e, index)}
-                />
-                foreign key
               </label>
             </div>
             <button onClick={() => handleDeleteRow(index)}>Delete</button>
