@@ -254,14 +254,28 @@ async function runConstraints(client, columns, collectionName) {
           ]).toArray();
           console.log(avgResult)
           const result = await name.updateMany(
-            { [item.tempColName]:null },
+            { [item.tempColName]:{ $type: "null" } },
             { $set: {[item.tempColName]: avgResult[0].avgValue } }
           );
           console.log(`${result.modifiedCount} documents updated.`);
-
+          
         }catch(err){
           console.error(err);
         }
+      }
+      if(item.nc == 1 && item.replaceWith != "none"){
+        try{
+          const temp = parseInt(item.replaceWith);
+          console.log("Replacing NULL With " + temp)
+          const result = await name.updateMany(
+            { [item.tempColName]:null },
+            { $set: {[item.tempColName]: temp} }
+          );
+          console.log(result);
+        }catch(err){
+          console.error(err);
+        }
+        
       }
       if (item.uc == 1) {
         try {
